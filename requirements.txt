@@ -1,0 +1,7 @@
+python-pptx==1.0.0
+streamlit==1.34.0
+python-dotenv==1.0.1
+pymupdf4llm==0.0.10
+PyMuPDFb==1.24.6
+langchain==0.2.11
+langchain-google-genai==1.0.8
