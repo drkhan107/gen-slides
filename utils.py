@@ -34,12 +34,11 @@ def parse_page_ranges(page_string: str, num_pages:int, max_pages: int) -> List[i
                 start, end = map(int, range_str.split('-'))
                 if start > end:
                     raise ValueError(f"Invalid range: {range_str}")
-                print(list(range(max(0, start), end+1)))
+                
                 return list(range(max(0, start), end+1))
             else:
                 page = int(range_str)
-                #if page < 1:
-                    #raise ValueError(f"Page number out of range: {page}")
+                
                 return [page]
         except ValueError as e:
             raise ValueError(f"Invalid input: {range_str}") from e
