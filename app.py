@@ -4,14 +4,16 @@ from genppt import GenPPT
 from utils import *
 
 max_pages=20
+max_chars=max_pages*2000
 def get_upload_file(uploaded_file,page_range):
         import fitz  # PyMuPDF
         import pymupdf4llm 
 
         if uploaded_file  is not None:
             # Open the uploaded file with PyMuPDF
-            pages=parse_page_ranges(page_range, max_pages)
+            
             document = fitz.open(stream=uploaded_file.read(), filetype="pdf")
+            pages=parse_page_ranges(page_range, document.page_count, max_pages)
             markdown_content=pymupdf4llm.to_markdown(document, pages=pages)
 
             
@@ -40,13 +42,14 @@ def create_ui():
     with col2:
         st.subheader("Advanced Options")
         #max_pages = st.number_input("Maximum number of pages:", min_value=1, max_value=200, value=100)
-        page_range = st.text_input("Page range (e.g., '0-50' or leave empty for all):", "")
+        page_range = st.text_input(f"Page range (e.g. 2,3,5-8,9 or leave empty for all) (Max of {max_pages} pages):", "")
 
     if st.button("Generate Slides", type="primary"):
         try:
             with st.spinner("Generating slides..."):
                 if content_type == "Text" and content:
-                    pp = GenPPT(text=content, agenda=agenda, pages=page_range)
+                    pp = GenPPT(text=content[:max_chars], agenda=agenda, pages=page_range)
+                    
                 elif content_type == "PDF" and uploaded_file:
                     content=get_upload_file(uploaded_file,page_range)
                     pp = GenPPT(text=content, agenda=agenda, pages=page_range)

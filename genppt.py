@@ -45,7 +45,7 @@ class GenPPT:
         self.agenda: str = agenda.strip() or "Generic"
 
         self.max_pages: int = max_pages
-        self.pages: List[int] = parse_page_ranges(pages, self.max_pages)
+        self.pages=pages
 
         self.model_name: str = model_name.strip()
         try:

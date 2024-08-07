@@ -1,6 +1,6 @@
 from typing import List, Union
 
-def parse_page_ranges(page_string: str, max_pages: int) -> List[int]:
+def parse_page_ranges(page_string: str, num_pages:int, max_pages: int) -> List[int]:
     """
     Parse a string of page ranges and return a list of valid page numbers.
 
@@ -34,11 +34,12 @@ def parse_page_ranges(page_string: str, max_pages: int) -> List[int]:
                 start, end = map(int, range_str.split('-'))
                 if start > end:
                     raise ValueError(f"Invalid range: {range_str}")
-                return list(range(max(1, start), min(end, max_pages) + 1))
+                print(list(range(max(0, start), end+1)))
+                return list(range(max(0, start), end+1))
             else:
                 page = int(range_str)
-                if page < 1 or page > max_pages:
-                    raise ValueError(f"Page number out of range: {page}")
+                #if page < 1:
+                    #raise ValueError(f"Page number out of range: {page}")
                 return [page]
         except ValueError as e:
             raise ValueError(f"Invalid input: {range_str}") from e
@@ -60,15 +61,16 @@ def parse_page_ranges(page_string: str, max_pages: int) -> List[int]:
 
         for page_range in page_ranges:
             pages = validate_and_parse_range(page_range)
+            
             for page in pages:
-                if page not in result:
-                    result.append(page)
+                if page not in result and page>=0 and page <= num_pages:
+                    result.append(page-1)
 
         # If no valid pages were found, return the default range
-        return sorted(result) if result else list(range(1, max_pages + 1))
+        return sorted(result[:max_pages]) if result else list(range(0, min(max_pages, num_pages)))
 
     except (TypeError, ValueError) as e:
         # Log the error (you might want to use a proper logging system here)
         print(f"Error parsing page ranges: {str(e)}")
         # Return default list in case of any exception
-        return list(range(1, max_pages + 1))
+        return list(range(0, min(num_pages,max_pages)))
